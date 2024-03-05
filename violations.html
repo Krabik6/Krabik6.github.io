@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <title>Заявления - Портал «Нарушениям.Нет»</title>
+    <style>
+        main { max-width: 800px; margin: auto; padding: 1rem; }
+        .error { color: red; }
+        nav ul { display: flex; justify-content: space-between; }
+    </style>
+</head>
+<body>
+<nav class="container-fluid">
+    <ul>
+        <li><a href="/violations.html">Заявления</a></li>
+        <li><a href="/new-violation.html">Создать заявление</a></li>
+        <li><a href="javascript:logout();">Выход</a></li>
+
+    </ul>
+</nav>
+<main class="container">
+    <h1>Заявления</h1>
+    <div id="violationsList">Загрузка заявлений...</div>
+    <button onclick="window.location.href='/new-violation.html';">Создать заявление</button>
+</main>
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        fetch('http://localhost:8081/violations', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+            },
+        })
+            .then(response => response.json())
+            .then(data => {
+                const violationsList = document.getElementById('violationsList');
+                violationsList.innerHTML = ''; // Очистка списка перед добавлением элементов
+                data.forEach(violation => {
+                    const div = document.createElement('div');
+                    div.innerHTML = `Номер: ${violation.carNumber}, Статус: ${violation.status}`;
+                    violationsList.appendChild(div);
+                });
+            })
+            .catch((error) => {
+                console.error('Ошибка:', error);
+            });
+    });
+
+</script>
+
+<script src="logout.js"></script>
+</body>
+</html>

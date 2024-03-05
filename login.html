@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <title>Вход на портал «Нарушениям.Нет»</title>
+    <style>
+        main { max-width: 390px; margin: auto; padding: 1rem; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+<nav class="container-fluid">
+    <ul><li><strong>Портал «Нарушениям.Нет»</strong></li></ul>
+    <ul>
+        <li><a href="/index.html">Регистрация</a></li>
+    </ul>
+</nav>
+<main class="container">
+    <h1>Вход</h1>
+    <form id="loginForm">
+        <label for="login">Логин</label>
+        <input type="text" id="login" name="login" required>
+        <label for="password">Пароль</label>
+        <input type="password" id="password" name="password" required>
+        <button type="submit">Войти</button>
+    </form>
+    <p>Ещё не зарегистрированы? <a href="/index.html">Зарегистрироваться</a></p>
+    <div id="loginErrorMessage" class="error"></div>
+</main>
+
+<script>
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const loginData = {
+            login: this.login.value,
+            password: this.password.value,
+        };
+        fetch('http://localhost:8081/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(loginData),
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    localStorage.setItem('auth_token', data.token);
+                    // Место для перехода к основному контенту сайта или перерисовки текущей страницы
+                } else {
+                    document.getElementById('loginErrorMessage').textContent = data.message;
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                document.getElementById('loginErrorMessage').textContent = 'Ошибка при входе';
+            });
+    });
+</script>
+
+<script src="logout.js"></script>
+</body>
+</html>

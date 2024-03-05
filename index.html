@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <title>Регистрация на портале «Нарушениям.Нет»</title>
+    <style>
+        main { max-width: 390px; margin: auto; padding: 1rem; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+<nav class="container-fluid">
+    <ul><li><strong>Портал «Нарушениям.Нет»</strong></li></ul>
+    <ul>
+        <li><a href="/login.html">Вход</a></li>
+    </ul>
+</nav>
+<main class="container">
+    <h1>Регистрация</h1>
+    <form id="registrationForm">
+        <label for="login">Логин</label>
+        <input type="text" id="login" name="login" required>
+        <label for="password">Пароль</label>
+        <input type="password" id="password" name="password" minlength="6" required>
+        <label for="fullName">ФИО</label>
+        <input type="text" id="fullName" name="fullName" pattern="[А-Яа-яЁё\s]+" required>
+        <label for="phone">Телефон</label>
+        <input type="tel" id="phone" name="phone" pattern="\+?[\d-]{11}" placeholder="+7(900)-900-90-90" required>
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+        <button type="submit">Зарегистрироваться</button>
+    </form>
+    <p>Уже зарегистрированы? <a href="/login.html">Войти</a></p>
+    <div id="errorMessage" class="error"></div>
+</main>
+
+<script>
+    document.getElementById('registrationForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const userData = {
+            login: this.login.value,
+            password: this.password.value,
+            fullName: this.fullName.value,
+            phone: this.phone.value,
+            email: this.email.value,
+        };
+
+        fetch('http://localhost:8081/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userData),
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    window.location.href = '/login.html';
+                } else {
+                    document.getElementById('errorMessage').textContent = data.message;
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    });
+</script>
+
+<script src="logout.js"></script>
+</body>
+</html>

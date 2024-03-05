@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <title>Панель администратора - Портал «Нарушениям.Нет»</title>
+    <style>
+        main { max-width: 800px; margin: auto; padding: 1rem; }
+        .error { color: red; }
+        nav ul { display: flex; justify-content: space-between; }
+        table { width: 100%; }
+    </style>
+</head>
+<body>
+<nav class="container-fluid">
+    <ul>
+        <li><a href="/admin-panel.html">Админ-панель</a></li>
+        <li><a href="javascript:logout();">Выход</a></li>
+    </ul>
+</nav>
+<main class="container">
+    <h1>Панель администратора</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>ФИО подавшего</th>
+            <th>Описание нарушения</th>
+            <th>Номер автомобиля</th>
+            <th>Статус</th>
+            <th>Действия</th>
+        </tr>
+        </thead>
+        <tbody id="violationsListAdmin">
+        <!-- Заявления будут добавлены здесь -->
+        </tbody>
+    </table>
+</main>
+
+<script>
+    function fetchViolations() {
+        fetch('http://localhost:8081/violations', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('admin_token')}`
+            },
+        })
+            .then(response => response.json())
+            .then(data => {
+                const violationsListAdmin = document.getElementById('violationsListAdmin');
+                violationsListAdmin.innerHTML = ''; // Очистка списка перед добавлением элементов
+                data.forEach(violation => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                <td>${violation.fullName}</td>
+                <td>${violation.description}</td>
+                <td>${violation.carNumber}</td>
+                <td>${violation.status}</td>
+                <td>
+                    <button onclick="updateStatus(${violation.id}, 'confirmed')">Подтвердить</button>
+                    <button onclick="updateStatus(${violation.id}, 'rejected')">Отклонить</button>
+                </td>
+            `;
+                    violationsListAdmin.appendChild(row);
+                });
+            })
+            .catch((error) => {
+                console.error('Ошибка:', error);
+            });
+    }
+
+    function updateStatus(id, status) {
+        fetch(`http://localhost:8081/violations/${id}`, {
+            method: 'PATCH',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('admin_token')}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ status }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                fetchViolations(); // Перезагрузка списка заявлений после обновления статуса
+            })
+            .catch((error) => {
+                console.error('Ошибка:', error);
+            });
+    }
+
+    document.addEventListener('DOMContentLoaded', fetchViolations);
+</script>
+
+<script src="logout.js"></script>
+</body>
+</html>

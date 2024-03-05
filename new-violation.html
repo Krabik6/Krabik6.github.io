@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+  <title>Новое заявление - Портал «Нарушениям.Нет»</title>
+  <style>
+    main { max-width: 800px; margin: auto; padding: 1rem; }
+    .error { color: red; }
+    nav ul { display: flex; justify-content: space-between; }
+  </style>
+</head>
+<body>
+<nav class="container-fluid">
+  <ul>
+    <li><a href="/new-violation.html">Создать заявление</a></li>
+    <li><a href="/violations.html">Заявления</a></li>
+    <li><a href="javascript:logout();">Выход</a></li>
+  </ul>
+</nav>
+<main class="container">
+  <h1>Новое заявление</h1>
+  <form id="newViolationForm">
+    <label for="carNumber">Гос. номер автомобиля</label>
+    <input type="text" id="carNumber" name="carNumber" required>
+    <label for="description">Описание нарушения</label>
+    <textarea id="description" name="description" required></textarea>
+    <button type="submit">Отправить</button>
+  </form>
+  <div id="errorMessage" class="error"></div>
+</main>
+
+
+
+<script>
+  document.getElementById('newViolationForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const violationData = {
+      carNumber: this.carNumber.value,
+      description: this.description.value,
+    };
+    console.log(violationData)
+
+    fetch('http://localhost:8081/violations', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(violationData),
+    })
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('Сетевая ошибка при отправке заявления');
+              }
+              return response.json();
+            })
+            .then(data => {
+              // Обработка успешного создания заявления
+              window.location.href = '/violations.html'; // Перенаправление на страницу со списком заявлений
+            })
+            .catch((error) => {
+              console.error('Ошибка:', error);
+              document.getElementById('errorMessage').textContent = error.message;
+            });
+  });
+</script>
+
+<script src="logout.js"></script>
+</body>
+</html>
