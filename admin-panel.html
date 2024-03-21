@@ -23,6 +23,15 @@
 </nav>
 <main class="container">
     <h1>Панель администратора</h1>
+    <div>
+        <label for="statusFilter">Фильтр по статусу:</label>
+        <select id="statusFilter">
+            <option value="all">Все</option>
+            <option value="Новое">Новые</option>
+            <option value="Подтвержденное">Подтвержденные</option>
+            <option value="Отклоненное">Отклоненные</option>
+        </select>
+    </div>
     <table>
         <thead>
         <tr>
@@ -40,6 +49,8 @@
 </main>
 
 <script>
+    let violationsData = []; // Для хранения данных о заявлениях
+
     function fetchViolations() {
         fetch(`${API_BASE_URL}/admin/violations`, {
             method: 'GET',
@@ -47,35 +58,44 @@
                 'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
             },
         })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
-                const violationsListAdmin = document.getElementById('violationsListAdmin');
-                violationsListAdmin.innerHTML = '';
-                data.forEach(violation => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                    <td>${violation.fullName}</td>
-                    <td>${violation.description}</td>
-                    <td>${violation.carNumber}</td>
-                    <td>${violation.status}</td>
-                    <td>
-                        <button onclick="updateStatus(${violation.id}, 'Подтвержденное')">Подтвердить</button>
-                        <button onclick="updateStatus(${violation.id}, 'Отклоненное')">Отклонить</button>
-                    </td>
-                `;
-                    violationsListAdmin.appendChild(row);
-                });
+                violationsData = data; // Сохраняем полученные данные
+                filterViolations(); // Показываем все заявления после загрузки
             })
             .catch((error) => {
                 console.error('Ошибка:', error);
                 alert(`Произошла ошибка: ${error.message}`);
             });
     }
+
+    function filterViolations() {
+        const filterValue = document.getElementById('statusFilter').value;
+        const filteredData = filterValue === 'all' ? violationsData : violationsData.filter(v => v.status === filterValue);
+        displayViolations(filteredData);
+    }
+
+    function displayViolations(data) {
+        const violationsListAdmin = document.getElementById('violationsListAdmin');
+        violationsListAdmin.innerHTML = '';
+        data.forEach(violation => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${violation.fullName}</td>
+                <td>${violation.description}</td>
+                <td>${violation.carNumber}</td>
+                <td>${violation.status}</td>
+                <td>
+                    <button onclick="updateStatus(${violation.id}, 'Подтвержденное')">Подтвердить</button>
+                    <button onclick="updateStatus(${violation.id}, 'Отклоненное')">Отклонить</button>
+                </td>
+            `;
+            violationsListAdmin.appendChild(row);
+        });
+    }
+
+    document.getElementById('statusFilter').addEventListener('change', filterViolations);
+
 
     function updateStatus(id, status) {
         fetch(`${API_BASE_URL}/admin/violations/${id}`, {
