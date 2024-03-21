@@ -9,6 +9,8 @@
         main { max-width: 390px; margin: auto; padding: 1rem; }
         .error { color: red; }
     </style>
+
+    <script src="config.js"></script>
 </head>
 <body>
 <nav class="container-fluid">
@@ -38,7 +40,8 @@
             login: this.login.value,
             password: this.password.value,
         };
-        fetch('http://localhost:8080/login', {
+        console.log(API_BASE_URL)
+        fetch(`${API_BASE_URL}/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

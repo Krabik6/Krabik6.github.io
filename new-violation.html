@@ -10,6 +10,8 @@
     .error { color: red; }
     nav ul { display: flex; justify-content: space-between; }
   </style>
+  <script src="config.js"></script>
+
 </head>
 <body>
 <nav class="container-fluid">
@@ -43,7 +45,7 @@
     };
     console.log(violationData)
 
-    fetch('http://localhost:8080/violations', {
+    fetch(`${API_BASE_URL}/violations`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,

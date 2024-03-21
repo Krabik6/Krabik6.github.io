@@ -11,6 +11,8 @@
         nav ul { display: flex; justify-content: space-between; }
         table { width: 100%; }
     </style>
+    <script src="config.js"></script>
+
 </head>
 <body>
 <nav class="container-fluid">
@@ -39,7 +41,7 @@
 
 <script>
     function fetchViolations() {
-        fetch('http://localhost:8080/admin/violations', {
+        fetch(`${API_BASE_URL}/admin/violations`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
@@ -76,7 +78,7 @@
     }
 
     function updateStatus(id, status) {
-        fetch(`http://localhost:8080/admin/violations/${id}`, {
+        fetch(`${API_BASE_URL}/admin/violations/${id}`, {
             method: 'PATCH',
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
