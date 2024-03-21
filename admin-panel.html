@@ -62,8 +62,8 @@
                     <td>${violation.carNumber}</td>
                     <td>${violation.status}</td>
                     <td>
-                        <button onclick="updateStatus(${violation.id}, 'confirmed')">Подтвердить</button>
-                        <button onclick="updateStatus(${violation.id}, 'rejected')">Отклонить</button>
+                        <button onclick="updateStatus(${violation.id}, 'Подтвержденное')">Подтвердить</button>
+                        <button onclick="updateStatus(${violation.id}, 'Отклоненное')">Отклонить</button>
                     </td>
                 `;
                     violationsListAdmin.appendChild(row);
