@@ -38,25 +38,28 @@
             login: this.login.value,
             password: this.password.value,
         };
-        fetch('http://localhost:8081/login', {
+        fetch('http://localhost:8080/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(loginData),
         })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    localStorage.setItem('auth_token', data.token);
-                    // Место для перехода к основному контенту сайта или перерисовки текущей страницы
-                } else {
-                    document.getElementById('loginErrorMessage').textContent = data.message;
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(data => Promise.reject(data));
                 }
+                return response.json();
             })
-            .catch((error) => {
+            .then(data => {
+                console.log("Login successful, token:", data.token);
+                localStorage.setItem('auth_token', data.token);
+                // Переход к основному контенту сайта или перерисовка текущей страницы
+                window.location.href = '/violations.html'; // Пример перехода
+            })
+            .catch(error => {
                 console.error('Error:', error);
-                document.getElementById('loginErrorMessage').textContent = 'Ошибка при входе';
+                document.getElementById('loginErrorMessage').textContent = error.message || 'Ошибка при входе';
             });
     });
 </script>

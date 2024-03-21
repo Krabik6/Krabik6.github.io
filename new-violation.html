@@ -14,8 +14,8 @@
 <body>
 <nav class="container-fluid">
   <ul>
-    <li><a href="/new-violation.html">Создать заявление</a></li>
     <li><a href="/violations.html">Заявления</a></li>
+    <li><a href="/new-violation.html">Создать заявление</a></li>
     <li><a href="javascript:logout();">Выход</a></li>
   </ul>
 </nav>
@@ -43,7 +43,7 @@
     };
     console.log(violationData)
 
-    fetch('http://localhost:8081/violations', {
+    fetch('http://localhost:8080/violations', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,

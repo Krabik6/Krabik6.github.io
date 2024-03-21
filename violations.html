@@ -30,7 +30,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        fetch('http://localhost:8081/violations', {
+        fetch('http://localhost:8080/violations', {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('auth_token')}`

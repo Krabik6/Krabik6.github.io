@@ -39,7 +39,7 @@
 
 <script>
     function fetchViolations() {
-        fetch('http://localhost:8081/violations', {
+        fetch('http://localhost:8080/violations', {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('admin_token')}`
@@ -70,7 +70,7 @@
     }
 
     function updateStatus(id, status) {
-        fetch(`http://localhost:8081/violations/${id}`, {
+        fetch(`http://localhost:8080/violations/${id}`, {
             method: 'PATCH',
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('admin_token')}`,

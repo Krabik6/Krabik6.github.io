@@ -27,7 +27,7 @@
         <label for="fullName">ФИО</label>
         <input type="text" id="fullName" name="fullName" pattern="[А-Яа-яЁё\s]+" required>
         <label for="phone">Телефон</label>
-        <input type="tel" id="phone" name="phone" pattern="\+?[\d-]{11}" placeholder="+7(900)-900-90-90" required>
+        <input type="tel" id="phone" name="phone" required>
         <label for="email">Email</label>
         <input type="email" id="email" name="email" required>
         <button type="submit">Зарегистрироваться</button>
@@ -48,23 +48,26 @@
             email: this.email.value,
         };
 
-        fetch('http://localhost:8081/register', {
+        fetch('http://localhost:8080/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(userData),
         })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    window.location.href = '/login.html';
-                } else {
-                    document.getElementById('errorMessage').textContent = data.message;
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(data => Promise.reject(data));
                 }
+                return response.json();
             })
-            .catch((error) => {
+            .then(data => {
+                console.log("data", data);
+                window.location.href = '/login.html';
+            })
+            .catch(error => {
                 console.error('Error:', error);
+                document.getElementById('errorMessage').textContent = error.message || 'Произошла ошибка при регистрации';
             });
     });
 </script>
