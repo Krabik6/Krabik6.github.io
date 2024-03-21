@@ -45,28 +45,33 @@
                 'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
             },
         })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
             .then(data => {
-                console.log(data)
                 const violationsListAdmin = document.getElementById('violationsListAdmin');
-                violationsListAdmin.innerHTML = ''; // Очистка списка перед добавлением элементов
+                violationsListAdmin.innerHTML = '';
                 data.forEach(violation => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                <td>${violation.fullName}</td>
-                <td>${violation.description}</td>
-                <td>${violation.carNumber}</td>
-                <td>${violation.status}</td>
-                <td>
-                    <button onclick="updateStatus(${violation.id}, 'confirmed')">Подтвердить</button>
-                    <button onclick="updateStatus(${violation.id}, 'rejected')">Отклонить</button>
-                </td>
-            `;
+                    <td>${violation.fullName}</td>
+                    <td>${violation.description}</td>
+                    <td>${violation.carNumber}</td>
+                    <td>${violation.status}</td>
+                    <td>
+                        <button onclick="updateStatus(${violation.id}, 'confirmed')">Подтвердить</button>
+                        <button onclick="updateStatus(${violation.id}, 'rejected')">Отклонить</button>
+                    </td>
+                `;
                     violationsListAdmin.appendChild(row);
                 });
             })
             .catch((error) => {
                 console.error('Ошибка:', error);
+                alert(`Произошла ошибка: ${error.message}`);
             });
     }
 
@@ -79,13 +84,19 @@
             },
             body: JSON.stringify({ status }),
         })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
             .then(data => {
                 alert(data.message);
-                fetchViolations(); // Перезагрузка списка заявлений после обновления статуса
+                fetchViolations(); // Обновление списка
             })
             .catch((error) => {
                 console.error('Ошибка:', error);
+                alert(`Произошла ошибка: ${error.message}`);
             });
     }
 
