@@ -42,11 +42,12 @@
         fetch('http://localhost:8080/violations', {
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${localStorage.getItem('admin_token')}`
+                'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
             },
         })
             .then(response => response.json())
             .then(data => {
+                console.log(data)
                 const violationsListAdmin = document.getElementById('violationsListAdmin');
                 violationsListAdmin.innerHTML = ''; // Очистка списка перед добавлением элементов
                 data.forEach(violation => {
@@ -73,7 +74,7 @@
         fetch(`http://localhost:8080/violations/${id}`, {
             method: 'PATCH',
             headers: {
-                'Authorization': `Bearer ${localStorage.getItem('admin_token')}`,
+                'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({ status }),
