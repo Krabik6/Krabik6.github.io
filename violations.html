@@ -44,7 +44,10 @@
                 violationsList.innerHTML = ''; // Очистка списка перед добавлением элементов
                 data.forEach(violation => {
                     const div = document.createElement('div');
-                    div.innerHTML = `Номер: ${violation.carNumber}, Статус: ${violation.status}`;
+                    // Форматирование даты создания
+                    const dateCreated = new Date(violation.createdAt).toLocaleString();
+                    // Добавление описания и даты создания к каждому элементу списка
+                    div.innerHTML = `Номер: ${violation.carNumber}, Статус: ${violation.status}, Описание: ${violation.description}, Дата создания: ${dateCreated}`;
                     violationsList.appendChild(div);
                 });
             })
@@ -52,6 +55,7 @@
                 console.error('Ошибка:', error);
             });
     });
+
 
 </script>
 
