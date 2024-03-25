@@ -10,6 +10,33 @@
         .error { color: red; }
         nav ul { display: flex; justify-content: space-between; }
         table { width: 100%; }
+
+        /* Добавьте эти стили в ваш <style> */
+        .violation-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1rem;
+            padding: 1rem;
+            transition: box-shadow 0.3s ease-in-out;
+        }
+
+        .violation-card:hover {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .violation-info {
+            margin-bottom: 0.5rem;
+        }
+
+        .violation-info span {
+            font-weight: bold;
+        }
+
+        .action-buttons button {
+            margin-right: 0.5rem;
+        }
+
     </style>
     <script src="config.js"></script>
 
@@ -77,22 +104,24 @@
 
     function displayViolations(data) {
         const violationsListAdmin = document.getElementById('violationsListAdmin');
-        violationsListAdmin.innerHTML = '';
+        violationsListAdmin.innerHTML = ''; // Очистка списка перед добавлением элементов
         data.forEach(violation => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${violation.fullName}</td>
-                <td>${violation.description}</td>
-                <td>${violation.carNumber}</td>
-                <td>${violation.status}</td>
-                <td>
-                    <button onclick="updateStatus(${violation.id}, 'Подтвержденное')">Подтвердить</button>
-                    <button onclick="updateStatus(${violation.id}, 'Отклоненное')">Отклонить</button>
-                </td>
-            `;
-            violationsListAdmin.appendChild(row);
+            const card = document.createElement('div');
+            card.className = 'violation-card';
+            card.innerHTML = `
+            <div class="violation-info"><span>ФИО подавшего:</span> ${violation.fullName}</div>
+            <div class="violation-info"><span>Описание нарушения:</span> ${violation.description}</div>
+            <div class="violation-info"><span>Номер автомобиля:</span> ${violation.carNumber}</div>
+            <div class="violation-info"><span>Статус:</span> ${violation.status}</div>
+            <div class="action-buttons">
+                <button onclick="updateStatus(${violation.id}, 'Подтвержденное')">Подтвердить</button>
+                <button onclick="updateStatus(${violation.id}, 'Отклоненное')">Отклонить</button>
+            </div>
+        `;
+            violationsListAdmin.appendChild(card);
         });
     }
+
 
     document.getElementById('statusFilter').addEventListener('change', filterViolations);
 
