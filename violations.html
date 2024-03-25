@@ -9,6 +9,29 @@
         main { max-width: 800px; margin: auto; padding: 1rem; }
         .error { color: red; }
         nav ul { display: flex; justify-content: space-between; }
+
+        .violation-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1rem;
+            padding: 1rem;
+            transition: box-shadow 0.3s ease-in-out;
+        }
+
+        .violation-card:hover {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .violation-info {
+            margin-bottom: 0.5rem;
+        }
+
+        .violation-info span {
+            font-weight: bold;
+        }
+
+
     </style>
     <script src="config.js"></script>
 
@@ -43,18 +66,23 @@
                 const violationsList = document.getElementById('violationsList');
                 violationsList.innerHTML = ''; // Очистка списка перед добавлением элементов
                 data.forEach(violation => {
-                    const div = document.createElement('div');
-                    // Форматирование даты создания
+                    const card = document.createElement('div');
+                    card.className = 'violation-card';
                     const dateCreated = new Date(violation.createdAt).toLocaleString();
-                    // Добавление описания и даты создания к каждому элементу списка
-                    div.innerHTML = `Номер: ${violation.carNumber}, Статус: ${violation.status}, Описание: ${violation.description}, Дата создания: ${dateCreated}`;
-                    violationsList.appendChild(div);
+                    card.innerHTML = `
+                    <div class="violation-info"><span>Номер:</span> ${violation.carNumber}</div>
+                    <div class="violation-info"><span>Статус:</span> ${violation.status}</div>
+                    <div class="violation-info"><span>Описание:</span> ${violation.description}</div>
+                    <div class="violation-info"><span>Дата создания:</span> ${dateCreated}</div>
+                `;
+                    violationsList.appendChild(card);
                 });
             })
             .catch((error) => {
                 console.error('Ошибка:', error);
             });
     });
+
 
 
 </script>
