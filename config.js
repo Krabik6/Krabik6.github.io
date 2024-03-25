@@ -1,2 +1,2 @@
-const API_BASE_URL = "http://94.228.121.97:8080";
+const API_BASE_URL = "https://narusheniy.net.ru";
 console.log(API_BASE_URL)
