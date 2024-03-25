@@ -23,15 +23,15 @@
     <h1>Регистрация</h1>
     <form id="registrationForm">
         <label for="login">Логин</label>
-        <input type="text" id="login" name="login" required>
-        <label for="password">Пароль</label>
-        <input type="password" id="password" name="password" minlength="6" required>
+        <input type="text" id="login" name="login" required placeholder="Ваш логин">
+        <label for="password">Пароль (мин. 6 символов)</label>
+        <input type="password" id="password" name="password" minlength="6" required placeholder="Ваш новый пароль">
         <label for="fullName">ФИО</label>
-        <input type="text" id="fullName" name="fullName" pattern="[А-Яа-яЁё\s]+" required>
-        <label for="phone">Телефон</label>
-        <input type="tel" id="phone" name="phone" required>
+        <input type="text" id="fullName" name="fullName" pattern="[А-Яа-яЁё\s]+" required placeholder="Иванов Иван Иванович">
+        <label for="phone">Телефон (формат +7XXXXXXXXXX)</label>
+        <input type="tel" id="phone" name="phone" required placeholder="+79001234567" pattern="\+7[0-9]{10}">
         <label for="email">Email</label>
-        <input type="email" id="email" name="email" required>
+        <input type="email" id="email" name="email" required placeholder="example@mail.com">
         <button type="submit">Зарегистрироваться</button>
     </form>
     <p>Уже зарегистрированы? <a href="/login.html">Войти</a></p>
