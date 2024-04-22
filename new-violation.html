@@ -1,49 +1,60 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
-  <title>Новое заявление - Портал «Нарушениям.Нет»</title>
+  <title>Новая запись - Портал «Фотосервис богов»</title>
   <style>
     main { max-width: 800px; margin: auto; padding: 1rem; }
     .error { color: red; }
     nav ul { display: flex; justify-content: space-between; }
+    .image-upload-container { margin-top: 20px; }
+    .image-upload-input { width: 100%; }
   </style>
   <script src="config.js"></script>
-
 </head>
 <body>
 <nav class="container-fluid">
   <ul>
-    <li><a href="/violations.html">Заявления</a></li>
-    <li><a href="/new-violation.html">Создать заявление</a></li>
+    <li><a href="/violations.html">Записи</a></li>
+    <li><a href="/new-violation.html">Создать новую запись</a></li>
     <li><a href="javascript:logout();">Выход</a></li>
   </ul>
 </nav>
 <main class="container">
-  <h1>Новое заявление</h1>
+  <h1>Новая запись</h1>
   <form id="newViolationForm">
-    <label for="carNumber">Гос. номер автомобиля</label>
+    <label for="carNumber">Заголовок</label>
     <input type="text" id="carNumber" name="carNumber" required>
-    <label for="description">Описание нарушения</label>
+    <label for="description">Описание записи</label>
     <textarea id="description" name="description" required></textarea>
+
+    <div class="image-upload-container">
+      <label for="imageUrls">Загрузите ссылки на изображения</label>
+      <input type="url" id="imageUrl1" name="imageUrls" placeholder="URL изображения 1" class="image-upload-input">
+      <input type="url" id="imageUrl2" name="imageUrls" placeholder="URL изображения 2" class="image-upload-input">
+      <!-- Можно добавить больше полей для URL или реализовать добавление полей динамически -->
+    </div>
+
     <button type="submit">Отправить</button>
   </form>
   <div id="errorMessage" class="error"></div>
 </main>
 
-
-
 <script>
   document.getElementById('newViolationForm').addEventListener('submit', function(event) {
     event.preventDefault();
 
+    const imageUrls = Array.from(document.querySelectorAll('[name="imageUrls"]'))
+            .map(input => input.value)
+            .filter(url => url !== ''); // Фильтруем пустые строки
+
     const violationData = {
       carNumber: this.carNumber.value,
       description: this.description.value,
+      imageUrls: imageUrls // Добавляем массив URL изображений
     };
-    console.log(violationData)
 
     fetch(`${API_BASE_URL}/violations`, {
       method: 'POST',
@@ -60,7 +71,6 @@
               return response.json();
             })
             .then(data => {
-              // Обработка успешного создания заявления
               window.location.href = '/violations.html'; // Перенаправление на страницу со списком заявлений
             })
             .catch((error) => {
