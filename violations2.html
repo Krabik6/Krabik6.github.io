@@ -125,6 +125,8 @@
                     <div class="violation-info"><span>Жизненный статус:</span> ${violation.status}</div>
                     <div class="violation-info"><span>Описание:</span> ${violation.description}</div>
                     <div class="violation-info"><span>Дата создания:</span> ${dateCreated}</div>
+                    <button onclick="updateStatus(${violation.id}, 'Нравится кому-то ')">Нравится</button>
+                    <button onclick="updateStatus(${violation.id}, 'Не нравится кому-то')">Не нравится</button>
                 `;
 
                     // Добавление галереи изображений
