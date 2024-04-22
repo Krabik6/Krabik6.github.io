@@ -121,6 +121,7 @@
                     card.className = 'violation-card';
                     const dateCreated = new Date(violation.createdAt).toLocaleString();
                     card.innerHTML = `
+                    <div class="violation-info"><span>Пользователь:</span> ${violation.fullName}</div>
                     <div class="violation-info"><span>Название:</span> ${violation.carNumber}</div>
                     <div class="violation-info"><span>Жизненный статус:</span> ${violation.status}</div>
                     <div class="violation-info"><span>Описание:</span> ${violation.description}</div>
